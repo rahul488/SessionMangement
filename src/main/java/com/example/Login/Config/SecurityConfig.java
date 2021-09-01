@@ -23,8 +23,6 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    static SessionRegistry SR;
-
     @Autowired
     private UserServiceImpl userServiceImpl;
 
@@ -52,40 +50,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll()
                 .and()
                 .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                //.sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
-                .sessionRegistry(SR)
                 ;
 
 
     }
 
-//    @Bean
-//    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-//        ConcurrentSessionControlAuthenticationStrategy sessionControlAuthenticationStrategy
-//                =new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
-//        sessionControlAuthenticationStrategy.setMaximumSessions(1);
-//        sessionControlAuthenticationStrategy.setExceptionIfMaximumExceeded(true);
-//        return sessionControlAuthenticationStrategy;
-//    }
-
     @Bean
     public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public HttpSessionEventPublisher httpSessionEventPublisher(){
-//        return new HttpSessionEventPublisher();
-//    }
-//    @Bean
-//    public SessionRegistry sessionRegistry(){
-//        return new SessionRegistryImpl();
-//    }
-@Bean
-public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-    return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
-}
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher(){
+        return new HttpSessionEventPublisher();
+    }
+
+
 
 }

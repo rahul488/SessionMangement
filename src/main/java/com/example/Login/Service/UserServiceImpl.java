@@ -24,10 +24,9 @@ public class UserServiceImpl implements UserDetailsService {
 
         //return new UserPrinciple(user);
 
-        UserDetails userDetails= org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword()).authorities("USER").build();
 
-        return userDetails;
 
     }
 
