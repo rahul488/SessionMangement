@@ -22,7 +22,13 @@ public class UserServiceImpl implements UserDetailsService {
         if(user == null)
             throw new UsernameNotFoundException("User not found...");
 
-        return new UserPrinciple(user);
+        //return new UserPrinciple(user);
+
+        UserDetails userDetails= org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+                .password(user.getPassword()).authorities("USER").build();
+
+        return userDetails;
+
     }
 
 }

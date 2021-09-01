@@ -2,6 +2,7 @@ package com.example.Login.Config;
 
 import com.example.Login.Service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,6 +22,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    static SessionRegistry SR;
 
     @Autowired
     private UserServiceImpl userServiceImpl;
@@ -49,9 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll()
                 .and()
                 .sessionManagement()
-                //.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 //.sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+                .sessionRegistry(SR)
                 ;
 
 
@@ -70,13 +75,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher(){
-        return new HttpSessionEventPublisher();
-    }
+//    @Bean
+//    public HttpSessionEventPublisher httpSessionEventPublisher(){
+//        return new HttpSessionEventPublisher();
+//    }
 //    @Bean
 //    public SessionRegistry sessionRegistry(){
 //        return new SessionRegistryImpl();
 //    }
+@Bean
+public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+    return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
+}
 
 }
